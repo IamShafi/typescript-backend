@@ -19,8 +19,23 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 //routes import
+import adminRouter from "./routes/admin.route.js"
+import clientRouter from "./routes/client.route.js"
+import leadRouter from "./routes/lead.route.js"
+import productRouter from "./routes/product.route.js"
 
 //routes declarations
 
+//_______________________________ Admin _______________________________
+app.use("/api/v1/admin", adminRouter)
+
+//_______________________________ Lead _______________________________
+app.use("/api/v1/lead", leadRouter)
+
+//_______________________________ client _______________________________
+app.use("/api/v1/client", clientRouter)
+
+//_______________________________ product _______________________________
+app.use("/api/v1/product", productRouter)
 
 export { app }

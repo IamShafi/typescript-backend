@@ -1,6 +1,6 @@
 ## Project setup
 
-# Backend
+# Typescript Backend
 
 1.
 
@@ -16,10 +16,10 @@ npm init
 
 ```
 
-3.  Install Nodemon, prettier
+3.  Install Nodemon, prettier, concurrently
 
 ```
-npm i -D nodemon, npm i -D prettier
+npm i -D nodemon, npm i -D prettier, npm i -D concurrently
 
 setup prettier : .prettierrc , .prettierignore
 ```
@@ -34,10 +34,15 @@ setup prettier : .prettierrc , .prettierignore
   },
 ```
 
-5.  setup folder structure
+5.  setup folder structure src/index.ts
 
 ```
-mkdir controllers db middleware routes
+$directories = "src/db", "src/controllers", "src/middleware", "src/routes"
+foreach ($dir in $directories) {
+    mkdir $dir
+}
+
+
 ```
 
 6. Initialize git 

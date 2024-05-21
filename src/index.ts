@@ -1,6 +1,20 @@
-import fs from "fs";
+import connectToDatabase from "./db/index.js"
+import colors from "colors"
+import dotenv from "dotenv"
 
-fs;
+dotenv.config({
+    path: "./.env"
+})
 
-import {hey} from "./helper.js"
-console.log(hey)
+import {app} from "./app.js"
+
+connectToDatabase()
+.then( () => {
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`⚙️  Server is running at port : ${process.env.PORT} `.bgMagenta.underline);
+    })
+})
+.catch((error) => {
+    console.log(colors.red("MongoDB connection FAILED"), error);
+})
+

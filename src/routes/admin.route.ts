@@ -8,13 +8,13 @@ import {
     updateAdmin,
     deleteAdmin
 } from "../controllers/admin.controller.js"
-
+import { verifyJWT } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
 //BASE_URL = http://localhost:8000/admin
 
-router.route("/create").post(createAdmin)
+router.route("/create").post()
 router.route("/read/:id").get()
 router.route("/update/:id").patch()
 router.route("/delete/:id").delete()

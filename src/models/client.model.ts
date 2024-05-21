@@ -2,19 +2,23 @@ import mongoose, {Schema} from "mongoose";
 
 const clientSchema = new Schema(
     {
-        enabled: {
-            type: Boolean,
-            default: true,
-          },
-          company: {
-            type: String,
-            trim: true,
-            required: true,
-          },
           name: {
             type: String,
             trim: true,
             required: true,
+          },
+          email: {
+            type: String,
+            trim: true,
+            lowercase: true,
+          },
+          password: {
+            type: String,
+            required: true,
+          },
+          country: {
+            type: String,
+            trim: true,
           },
           surname: {
             type: String,
@@ -53,28 +57,31 @@ const clientSchema = new Schema(
             type: String,
             trim: true,
           },
-          country: {
-            type: String,
-            trim: true,
-          },
           phone: {
             type: String,
             trim: true,
             required: true,
           },
-          email: {
-            type: String,
-            trim: true,
-            lowercase: true,
-          },
           website: {
             type: String,
             trim: true,
           },
+          enabled: {
+            type: Boolean,
+            default: true,
+          },
+          company: {
+            type: String,
+            trim: true,
+            required: true,
+          },
           created: {
             type: Date,
             default: Date.now,
-          }
+          },
+          refreshToken: {
+            type: String
+        },
 
     }
 )

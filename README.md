@@ -37,7 +37,7 @@ setup prettier : .prettierrc , .prettierignore
 5.  setup folder structure src/index.ts
 
 ```
-$directories = "src/db", "src/controllers", "src/middleware", "src/routes"
+$directories = "src/db", "src/controllers", "src/middleware", "src/routes", "src/models"
 foreach ($dir in $directories) {
     mkdir $dir
 }

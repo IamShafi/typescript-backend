@@ -1,4 +1,4 @@
-import connectToDatabase from "./db/index.js"
+import connectToDatabase from "./database/index.js"
 import colors from "colors"
 import dotenv from "dotenv"
 

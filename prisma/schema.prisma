@@ -88,8 +88,8 @@ model AffiliateStat {
 }
 
 enum UserRole {
-  user
-  admin
-  superadmin
+  USER
+  ADMIN
+  SUPERADMIN
 }
 

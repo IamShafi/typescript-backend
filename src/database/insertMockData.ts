@@ -20,7 +20,7 @@ import {
     occupation: string;
     phoneNumber: string;
     transactions: string[];
-    role: 'user' | 'admin' | 'superadmin';
+    role: 'USER' | 'ADMIN' | 'SUPERADMIN';
   }
   
    interface Product {
@@ -71,13 +71,13 @@ import {
 const insertMockData = async (): Promise<void> => {
   try {
     /* ONLY ADD DATA ONE TIME */
-    // await prisma.user.createMany({
-    //     data: dataUser as User[]
-    // });
+    await prisma.user.createMany({
+        data: dataUser as User[]
+    });
 
-    // await prisma.product.createMany({
-    //     data: dataProduct as Product[]
-    // });
+    await prisma.product.createMany({
+        data: dataProduct as Product[]
+    });
 
     // await prisma.productStat.createMany({
     //     data: dataProductStat as ProductStat[]

@@ -17,6 +17,7 @@ model User {
   country     String?
   occupation  String?
   phoneNumber String?
+  refreshToken String?
   role        UserRole
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -87,7 +88,7 @@ model AffiliateStat {
 }
 
 enum UserRole {
-  USER
-  ADMIN
-  SUPERADMIN
+  user
+  admin
+  superadmin
 }

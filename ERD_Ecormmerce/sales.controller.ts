@@ -1,6 +1,6 @@
-import { ApiError } from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import prisma from "../utils/prismadb.js";
+import { ApiError } from "../src/utils/ApiError.js";
+import { asyncHandler } from "../src/utils/asyncHandler.js";
+import prisma from "../src/utils/prismadb.js";
 
 const getSales = asyncHandler(async (req, res) => {
   try {
@@ -19,6 +19,4 @@ const getSales = asyncHandler(async (req, res) => {
   }
 });
 
-export {
-  getSales
-};
+export { getSales };

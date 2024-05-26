@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url = env("DATABASE_URL")
+}
+
+enum JobType {
+  fulltime
+  parttime
+  internship
+  volunteer
+  contract
+}
+
+enum UserType {
+  Employer
+  JobSeeker
+}
+
+enum Experience {
+  Fresh
+  Beginner
+  Intermediate
+  Expert
+  Guru
+}
+
+enum Position {
+  Onsite
+  Remote
+  Hybrid
+}
+
+model Account {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String  @db.ObjectId
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map(name: "account")
+}
+
+model Otp {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String  @db.ObjectId
+  otp         String
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map(name: "otp")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  password      String?
+  image         String?
+  email         String? @unique
+  userType      UserType @default(JobSeeker)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  emailVerified DateTime?
+
+  accounts Account[]
+  otps     Otp[]
+  jobs     Job[]
+
+  @@map(name: "users")
+}
+
+model Job {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  imageSrc        String?    @map(name: "image_src")
+  jobTitle        String     @map(name: "job_title")
+  jobType         JobType    @map(name: "job_type")
+  datePosted      DateTime   @default(now()) @map(name: "date_posted")
+  salary          Int?
+  jobInfo         String     @map(name: "job_description")
+  jobRole         String?
+  skills          String?
+  compensation    String?
+  hired           Int?
+  process         String?
+  location        String?
+  experience      Experience
+  position        Position
+  companyName     String?
+  aboutCompany    String?
+  country         String?
+  applicationLink String?
+  jobId           String     @db.ObjectId
+
+  user User @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@map(name: "jobs")
+}

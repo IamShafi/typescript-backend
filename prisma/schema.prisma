@@ -1,114 +1,126 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "mongodb"
-  url = env("DATABASE_URL")
-}
-
-enum JobType {
-  fulltime
-  parttime
-  internship
-  volunteer
-  contract
-}
-
-enum UserType {
-  Employer
-  JobSeeker
-}
-
-enum Experience {
-  Fresh
-  Beginner
-  Intermediate
-  Expert
-  Guru
-}
-
-enum Position {
-  Onsite
-  Remote
-  Hybrid
-}
-
-model Account {
-  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String  @db.ObjectId
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-  oauth_token_secret String?
-  oauth_token        String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@map(name: "account")
-}
-
-model Otp {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String  @db.ObjectId
-  otp         String
-  createdAt   DateTime @default(now())
-  expiresAt   DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map(name: "otp")
-}
-
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  password      String?
-  image         String?
-  email         String? @unique
-  userType      UserType @default(JobSeeker)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  emailVerified DateTime?
-
-  accounts Account[]
-  otps     Otp[]
-  jobs     Job[]
-
-  @@map(name: "users")
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName   String
+  lastName    String
+  email       String   @unique
+  password    String
+  address     String?
+  phone       String
+  admin       Boolean  @default(false)
+  favorites   String[] @default([])
+  
+  // Relations
+  orders      Order[]
+  ratings     Rating[]
+  comments    Comment[]
+  reports     Report[]
 }
 
-model Job {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  imageSrc        String?    @map(name: "image_src")
-  jobTitle        String     @map(name: "job_title")
-  jobType         JobType    @map(name: "job_type")
-  datePosted      DateTime   @default(now()) @map(name: "date_posted")
-  salary          Int?
-  jobInfo         String     @map(name: "job_description")
-  jobRole         String?
-  skills          String?
-  compensation    String?
-  hired           Int?
-  process         String?
-  location        String?
-  experience      Experience
-  position        Position
-  companyName     String?
-  aboutCompany    String?
-  country         String?
-  applicationLink String?
-  jobId           String     @db.ObjectId
+model Product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  imageUrl    String
+  name        String
+  color       String
+  sizes       String[]
+  description String
+  categoryId  String   @db.ObjectId
+  gender      String
+  price       Float
+  status      Boolean  @default(true)
 
-  user User @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  // Relations
+  category    Category @relation(fields: [categoryId], references: [id])
+  ratings     Rating[]
+  comments    Comment[]
+}
 
-  @@map(name: "jobs")
+model Order {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  products   Json
+  buyerId    String   @db.ObjectId
+  address    String
+  status     Boolean  @default(true)
+  prepare    Boolean  @default(true)
+  onWay      Boolean  @default(false)
+  delivered  Boolean  @default(false)
+  cancel     Boolean  @default(false)
+  orderDate  DateTime @default(now())
+
+  // Relations
+  buyer      User @relation(fields: [buyerId], references: [id])
+  reports    Report[]
+}
+
+model Rating {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String @db.ObjectId
+  rating  Int      @db.Int
+  ownerId String   @db.ObjectId
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id])
+  owner   User    @relation(fields: [ownerId], references: [id])
+}
+
+model Category {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  genreId String   @db.ObjectId
+  status  Boolean  @default(true)
+
+  // Relations
+  genre   Genre    @relation(fields: [genreId], references: [id])
+  products Product[]
+}
+
+model Genre {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  name   String   @unique
+  status Boolean  @default(true)
+
+  // Relations
+  categories Category[]
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId
+  comment   String
+  authorId  String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id])
+  author  User    @relation(fields: [authorId], references: [id])
+}
+
+model Image {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  url String
+}
+
+model MiniImage {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  url String
+}
+
+model Report {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String   @db.ObjectId
+  userId    String   @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
 }

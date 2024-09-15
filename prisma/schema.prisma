@@ -32,13 +32,14 @@ model Product {
   color       String
   sizes       String[]
   description String
-  categoryId  String   @db.ObjectId
   gender      String
   price       Float
   status      Boolean  @default(true)
 
   // Relations
+  // Each product can belong to only one category.
   category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String   @db.ObjectId
   ratings     Rating[]
   comments    Comment[]
 }
@@ -79,6 +80,7 @@ model Category {
 
   // Relations
   genre   Genre    @relation(fields: [genreId], references: [id])
+  // One category can have many products
   products Product[]
 }
 

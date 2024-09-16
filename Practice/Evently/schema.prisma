@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId          String
+  firstName        String
+  lastName         String
+  username         String     @unique
+  email            String     @unique
+  password         String?
+  picture          String
+
+  organizedEvents Event[]  // Relation to Event schema
+  orders          Order[]  // One-to-many relationship (one User can have many Orders)
+}
+
+model Event {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  title: String,
+  description: String?,
+  location: String?,
+  createdAt: DateTime   @default(now()),
+  imageUrl: String,
+  startDateTime: DateTime   @default(now()),
+  endDateTime: DateTime   @default(now()),
+  price: String,
+  isFree: Boolean @default(false),
+  url: String?,
+
+
+  category     Category? @relation(fields: [categoryId], references: [id])  // Relation to Category schema
+  categoryId   String?    // Foreign key for Category
+
+  organizer    User      @relation(fields: [organizerId], references: [id])  // Relation to User schema
+  organizerId  String     // Foreign key for User
+}
+
+model Category {
+     id               String     @id @default(auto()) @map("_id") @db.ObjectId
+     name   String
+     events Event[]  // Relation to Event schema
+}
+
+model Order {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId   // Unique ID for each order
+  createdAt    DateTime @default(now())        // Date the order was created
+  stripeId     String   @unique                // Stripe payment ID, must be unique
+  totalAmount  String?                         // Optional field for the total amount
+
+  // Relationships
+  event        Event?    @relation(fields: [eventId], references: [id])  // Foreign key to Event
+  eventId      String?   // Foreign key field for the related Event
+
+  buyer        User      @relation(fields: [buyerId], references: [id])  // Foreign key to User
+  buyerId      String    // Foreign key field for the related User
+}
